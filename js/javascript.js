@@ -1,34 +1,38 @@
 const gameBoard = (() => {
   let choice = [];
 
-  const createBoxArray = (e) => {
+  const createChoiceAndBox = (e) => {
+    sign: this.sign;
+    boxId: e.target.getAttribute("data-id");
+    return { sign: this.sign, boxId: e.target.getAttribute("data-id") };
+  };
+
+  const pushChoiceAndBox = (e) => {
+    const isChoice = createChoiceAndBox(e);
+    choice.push(isChoice);
+    return choice;
+  };
+
+  const createBoxArray = () => {
     const box = document.querySelectorAll(".box");
     let boxArray = [];
     box.forEach((item) => boxArray.push(item));
     return boxArray;
   };
 
-  const setSign = (e) => {
-    if (this.sign === "X") {
-      choice.push("X");
-      displaySigns();
-    } else {
-      choice.push("O");
-      displaySigns();
-    }
-
-    const event = e.target;
-    console.log(choice);
-  };
-  const displaySigns = () => {
+  const displaySigns = (e) => {
+    const isChoiceArray = pushChoiceAndBox(e);
     const isBoxArray = createBoxArray();
-    for (sign of choice) {
-      isBoxArray.forEach((item) => (item.innerHTML = sign));
-      isBoxArray.shift();
-    }
+    const isFilteredBoxArray = isBoxArray.filter(
+      (item) =>
+        item.getAttribute("data-id") ==
+        isChoiceArray[isChoiceArray.length - 1]["boxId"]
+    );
+    const isClickedElement = isFilteredBoxArray[0];
+    isClickedElement.textContent = this.sign;
   };
 
-  return { setSign };
+  return { displaySigns };
 })();
 
 const gameFlow = (() => {
@@ -44,4 +48,4 @@ const player = (name, sign) => {
 
 document
   .querySelectorAll(".box")
-  .forEach((item) => item.addEventListener("click", gameBoard.setSign));
+  .forEach((item) => item.addEventListener("click", gameBoard.displaySigns));
