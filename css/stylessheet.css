@@ -55,5 +55,9 @@ header ul li {
 }
 
 .box {
+  font-size: 3.5rem;
+  display: flex;
   outline: 2px solid black;
+  justify-content: center;
+  align-items: center;
 }
