@@ -72,9 +72,21 @@ const gameFlow = (() => {
   const getPlayerInput = (e) => {
     e.preventDefault();
     const isPlayerName = document.querySelector("#player-name").value;
-    const isSign = document.querySelector(`input[name="sign"]:checked`).value;
-    const isPlayer = player(isPlayerName, isSign);
-    savePlayer(isPlayer);
+    if (isPlayerArray.length > 1) return;
+    if (isPlayerArray[0] === undefined) {
+      const isSign = document.querySelector(`input[name="sign"]:checked`).value;
+      const isPlayer = player(isPlayerName, isSign);
+      return savePlayer(isPlayer);
+    }
+    if (isPlayerArray[0]["sign"] === "X") {
+      const isSign = "O";
+      const isPlayer = player(isPlayerName, isSign);
+      return savePlayer(isPlayer);
+    } else {
+      const isSign = "X";
+      const isPlayer = player(isPlayerName, isSign);
+      savePlayer(isPlayer);
+    }
   };
 
   const savePlayer = (isPlayer) => {
