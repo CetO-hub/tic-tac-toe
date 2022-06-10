@@ -32,7 +32,27 @@ const gameBoard = (() => {
     isClickedElement.textContent = this.sign;
   };
 
-  return { displaySigns };
+  const createOverlay = () => {
+    document.querySelector(".overlay").classList.add("active");
+    document.querySelector(".overlay").addEventListener("click", removeOverlay);
+  };
+
+  const displayPlayerForm = () => {
+    document.querySelector(".form-container").classList.add("active");
+    document
+      .querySelector(".overlay")
+      .addEventListener("click", removePlayerForm);
+  };
+
+  const removeOverlay = () => {
+    document.querySelector(".overlay").classList.remove("active");
+  };
+
+  const removePlayerForm = () => {
+    document.querySelector(".form-container").classList.remove("active");
+  };
+
+  return { displaySigns, createOverlay, displayPlayerForm };
 })();
 
 const gameFlow = (() => {
@@ -40,6 +60,8 @@ const gameFlow = (() => {
 })();
 
 const player = (name, sign) => {
+  gameBoard.createOverlay();
+  gameBoard.displayPlayerForm();
   this.name = name;
   this.sign = sign;
 
@@ -49,3 +71,11 @@ const player = (name, sign) => {
 document
   .querySelectorAll(".box")
   .forEach((item) => item.addEventListener("click", gameBoard.displaySigns));
+
+document
+  .querySelectorAll("#header-player-name-selection1")
+  .forEach((item) => item.addEventListener("click", player));
+
+document
+  .querySelectorAll("#header-player-name-selection2")
+  .forEach((item) => item.addEventListener("click", player));
