@@ -58,7 +58,24 @@ const gameBoard = (() => {
     document.querySelector(".form-container").classList.remove("active");
   };
 
-  return { displaySigns, createOverlay, displayPlayerForm, choice };
+  const printPlayerName = () => {
+    if (gameFlow.isPlayerArray.length === 1) {
+      return (document.querySelector(
+        "#header-player-name-selection1"
+      ).textContent = gameFlow.isPlayerArray[0].name);
+    } else {
+      document.querySelector("#header-player-name-selection2").textContent =
+        gameFlow.isPlayerArray[1].name;
+    }
+  };
+
+  return {
+    displaySigns,
+    createOverlay,
+    displayPlayerForm,
+    choice,
+    printPlayerName,
+  };
 })();
 
 const gameFlow = (() => {
@@ -72,25 +89,30 @@ const gameFlow = (() => {
   const getPlayerInput = (e) => {
     e.preventDefault();
     const isPlayerName = document.querySelector("#player-name").value;
+
     if (isPlayerArray.length > 1) return;
     if (isPlayerArray[0] === undefined) {
       const isSign = document.querySelector(`input[name="sign"]:checked`).value;
       const isPlayer = player(isPlayerName, isSign);
-      return savePlayer(isPlayer);
+      savePlayer(isPlayer);
+      return gameBoard.printPlayerName();
     }
     if (isPlayerArray[0]["sign"] === "X") {
       const isSign = "O";
       const isPlayer = player(isPlayerName, isSign);
-      return savePlayer(isPlayer);
+      savePlayer(isPlayer);
+      return gameBoard.printPlayerName();
     } else {
       const isSign = "X";
       const isPlayer = player(isPlayerName, isSign);
       savePlayer(isPlayer);
+      gameBoard.printPlayerName();
     }
   };
 
   const savePlayer = (isPlayer) => {
     isPlayerArray.push(isPlayer);
+    console.log(isPlayerArray);
   };
 
   const startGame = () => {
@@ -99,12 +121,13 @@ const gameFlow = (() => {
       .addEventListener("click", gameBoard.displaySigns);
   };
 
-  return { displayForm, getPlayerInput, startGame };
+  return { displayForm, getPlayerInput, startGame, isPlayerArray };
 })();
 
 const player = (name, sign) => {
   this.name = name;
   this.sign = sign;
+  this.player = player;
 
   return { name, sign };
 };
