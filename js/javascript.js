@@ -42,6 +42,12 @@ const gameBoard = (() => {
     document
       .querySelector(".overlay")
       .addEventListener("click", removePlayerForm);
+    document
+      .querySelector("#submit-player-form")
+      .addEventListener("click", removePlayerForm);
+    document
+      .querySelector("#submit-player-form")
+      .addEventListener("click", removeOverlay);
   };
 
   const removeOverlay = () => {
@@ -52,30 +58,61 @@ const gameBoard = (() => {
     document.querySelector(".form-container").classList.remove("active");
   };
 
-  return { displaySigns, createOverlay, displayPlayerForm };
+  return { displaySigns, createOverlay, displayPlayerForm, choice };
 })();
 
 const gameFlow = (() => {
-  return;
+  let isPlayerArray = [];
+
+  const displayForm = () => {
+    gameBoard.createOverlay();
+    gameBoard.displayPlayerForm();
+  };
+
+  const getPlayerInput = (e) => {
+    e.preventDefault();
+    const isPlayerName = document.querySelector("#player-name").value;
+    const isSign = document.querySelector(`input[name="sign"]:checked`).value;
+    const isPlayer = player(isPlayerName, isSign);
+    savePlayer(isPlayer);
+  };
+
+  const savePlayer = (isPlayer) => {};
+
+  const startGame = () => {
+    document
+      .querySelector(".gameboard")
+      .addEventListener("click", gameBoard.displaySigns);
+  };
+
+  return { displayForm, getPlayerInput, startGame };
 })();
 
 const player = (name, sign) => {
-  gameBoard.createOverlay();
-  gameBoard.displayPlayerForm();
   this.name = name;
   this.sign = sign;
 
   return { name, sign };
 };
 
+// Event listener's
+
 document
   .querySelectorAll(".box")
   .forEach((item) => item.addEventListener("click", gameBoard.displaySigns));
 
 document
-  .querySelectorAll("#header-player-name-selection1")
-  .forEach((item) => item.addEventListener("click", player));
+  .querySelector("#header-player-name-selection1")
+  .addEventListener("click", gameFlow.displayForm);
 
 document
-  .querySelectorAll("#header-player-name-selection2")
-  .forEach((item) => item.addEventListener("click", player));
+  .querySelector("#header-player-name-selection2")
+  .addEventListener("click", gameFlow.displayForm);
+
+document
+  .querySelector("#submit-player-form")
+  .addEventListener("click", gameFlow.getPlayerInput);
+
+document
+  .querySelector("#start-restart-game")
+  .addEventListener("click", gameFlow.startGame);
