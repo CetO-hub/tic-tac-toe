@@ -63,7 +63,8 @@ const gameBoard = (() => {
       return (document.querySelector(
         "#header-player-name-selection1"
       ).textContent = gameFlow.isPlayerArray[0].name);
-    } else {
+    }
+    if (gameFlow.isPlayerArray.length === 2) {
       document.querySelector("#header-player-name-selection2").textContent =
         gameFlow.isPlayerArray[1].name;
     }
@@ -75,6 +76,7 @@ const gameBoard = (() => {
     displayPlayerForm,
     choice,
     printPlayerName,
+    createBoxArray,
   };
 })();
 
@@ -112,22 +114,25 @@ const gameFlow = (() => {
 
   const savePlayer = (isPlayer) => {
     isPlayerArray.push(isPlayer);
-    console.log(isPlayerArray);
   };
 
-  const startGame = () => {
-    document
-      .querySelector(".gameboard")
-      .addEventListener("click", gameBoard.displaySigns);
+  const resetGame = () => {
+    isPlayerArray.length = 0;
+    gameBoard.length = 0;
+    const isBoxArray = gameBoard.createBoxArray();
+    isBoxArray.forEach((item) => (item.textContent = ""));
+    document.querySelector("#header-player-name-selection1").textContent =
+      "Enter name";
+    document.querySelector("#header-player-name-selection2").textContent =
+      "Enter name";
   };
 
-  return { displayForm, getPlayerInput, startGame, isPlayerArray };
+  return { displayForm, getPlayerInput, resetGame, isPlayerArray };
 })();
 
 const player = (name, sign) => {
   this.name = name;
   this.sign = sign;
-  this.player = player;
 
   return { name, sign };
 };
@@ -152,4 +157,4 @@ document
 
 document
   .querySelector("#start-restart-game")
-  .addEventListener("click", gameFlow.startGame);
+  .addEventListener("click", gameFlow.resetGame);
