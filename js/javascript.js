@@ -77,7 +77,9 @@ const gameFlow = (() => {
     savePlayer(isPlayer);
   };
 
-  const savePlayer = (isPlayer) => {};
+  const savePlayer = (isPlayer) => {
+    isPlayerArray.push(isPlayer);
+  };
 
   const startGame = () => {
     document
