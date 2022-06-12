@@ -35,6 +35,7 @@ const gameBoard = (() => {
     ) {
       isClickedElement.textContent = "X";
       gameFlow.isRoundCounter++;
+      gameFlow.determineWinner();
       return;
     }
     if (
@@ -43,6 +44,7 @@ const gameBoard = (() => {
     ) {
       isClickedElement.textContent = "O";
       gameFlow.isRoundCounter++;
+      gameFlow.determineWinner();
       return;
     }
   };
@@ -158,6 +160,94 @@ const gameFlow = (() => {
       );
   };
 
+  const determineWinner = () => {
+    const isBoxArray = gameBoard.createBoxArray();
+    const isBoxArrayTopHor = isBoxArray.filter((item) => {
+      return item.dataset.id <= 3 && item.dataset.id >= 1;
+    });
+    const isBoxArrayMidHor = isBoxArray.filter((item) => {
+      return item.dataset.id <= 6 && item.dataset.id >= 4;
+    });
+    const isBoxArrayBotHor = isBoxArray.filter((item) => {
+      return item.dataset.id <= 9 && item.dataset.id >= 7;
+    });
+
+    const isBoxArrayLeftVer = isBoxArray.filter((item) => {
+      return (
+        item.dataset.id == 1 || item.dataset.id == 4 || item.dataset.id == 7
+      );
+    });
+    const isBoxArrayMidVer = isBoxArray.filter((item) => {
+      return (
+        item.dataset.id == 2 || item.dataset.id == 5 || item.dataset.id == 8
+      );
+    });
+    const isBoxArrayRightVer = isBoxArray.filter((item) => {
+      return (
+        item.dataset.id == 3 || item.dataset.id == 6 || item.dataset.id == 9
+      );
+    });
+
+    const isBoxArrayDiaUpDown = isBoxArray.filter((item) => {
+      return (
+        item.dataset.id == 1 || item.dataset.id == 5 || item.dataset.id == 9
+      );
+    });
+
+    const isBoxArrayDiaDownUp = isBoxArray.filter((item) => {
+      return (
+        item.dataset.id == 7 || item.dataset.id == 5 || item.dataset.id == 3
+      );
+    });
+
+    if (
+      isBoxArrayTopHor.every((item) => item.textContent == "X") ||
+      isBoxArrayMidHor.every((item) => item.textContent == "X") ||
+      isBoxArrayBotHor.every((item) => item.textContent == "X") ||
+      isBoxArrayLeftVer.every((item) => item.textContent == "X") ||
+      isBoxArrayMidVer.every((item) => item.textContent == "X") ||
+      isBoxArrayRightVer.every((item) => item.textContent == "X") ||
+      isBoxArrayDiaUpDown.every((item) => item.textContent == "X") ||
+      isBoxArrayDiaDownUp.every((item) => item.textContent == "X")
+    ) {
+      alert(
+        `Player: ${isPlayerArray
+          .map((item) => {
+            if (item.sign == "X") return item.name;
+          })
+          .join(" ")} won!`
+      );
+      document
+        .querySelectorAll(".box")
+        .forEach((item) =>
+          item.removeEventListener("click", gameBoard.displaySigns)
+        );
+    }
+    if (
+      isBoxArrayTopHor.every((item) => item.textContent == "O") ||
+      isBoxArrayMidHor.every((item) => item.textContent == "O") ||
+      isBoxArrayBotHor.every((item) => item.textContent == "O") ||
+      isBoxArrayLeftVer.every((item) => item.textContent == "O") ||
+      isBoxArrayMidVer.every((item) => item.textContent == "O") ||
+      isBoxArrayRightVer.every((item) => item.textContent == "O") ||
+      isBoxArrayDiaUpDown.every((item) => item.textContent == "O") ||
+      isBoxArrayDiaDownUp.every((item) => item.textContent == "O")
+    ) {
+      alert(
+        `Player: ${isPlayerArray
+          .map((item) => {
+            if (item.sign == "O") return item.name;
+          })
+          .join(" ")} won!`
+      );
+      document
+        .querySelectorAll(".box")
+        .forEach((item) =>
+          item.removeEventListener("click", gameBoard.displaySigns)
+        );
+    }
+  };
+
   return {
     displayForm,
     getPlayerInput,
@@ -165,6 +255,7 @@ const gameFlow = (() => {
     isPlayerArray,
     playRound,
     isRoundCounter,
+    determineWinner,
   };
 })();
 
