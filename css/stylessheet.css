@@ -79,7 +79,7 @@ header ul li {
 .form-container {
   padding: 20px;
   background-color: black;
-  position: absolute;
+  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) scale(0);
@@ -124,5 +124,5 @@ header ul li {
 }
 
 .form-container.active {
-  transform: scale(1);
+  transform: translate(-50%, -50%) scale(1);
 }

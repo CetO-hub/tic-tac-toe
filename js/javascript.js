@@ -21,15 +21,35 @@ const gameBoard = (() => {
   };
 
   const displaySigns = (e) => {
-    const isChoiceArray = pushChoiceAndBox(e);
-    const isBoxArray = createBoxArray();
-    const isFilteredBoxArray = isBoxArray.filter(
-      (item) =>
-        item.getAttribute("data-id") ==
-        isChoiceArray[isChoiceArray.length - 1]["boxId"]
-    );
-    const isClickedElement = isFilteredBoxArray[0];
-    isClickedElement.textContent = this.sign;
+    if (gameFlow.isRoundCounter % 2 === 0) {
+      console.log(gameFlow.isRoundCounter);
+      const isChoiceArray = pushChoiceAndBox(e);
+      const isBoxArray = createBoxArray();
+      const isFilteredBoxArray = isBoxArray.filter(
+        (item) =>
+          item.getAttribute("data-id") ==
+          isChoiceArray[isChoiceArray.length - 1]["boxId"]
+      );
+      const isClickedElement = isFilteredBoxArray[0];
+
+      isClickedElement.textContent = "X";
+      gameFlow.isRoundCounter++;
+      return;
+    }
+    if (gameFlow.isRoundCounter % 2 != 0) {
+      console.log(gameFlow.isRoundCounter);
+      const isChoiceArray = pushChoiceAndBox(e);
+      const isBoxArray = createBoxArray();
+      const isFilteredBoxArray = isBoxArray.filter(
+        (item) =>
+          item.getAttribute("data-id") ==
+          isChoiceArray[isChoiceArray.length - 1]["boxId"]
+      );
+      const isClickedElement = isFilteredBoxArray[0];
+      isClickedElement.textContent = "O";
+      gameFlow.isRoundCounter++;
+      return;
+    }
   };
 
   const createOverlay = () => {
@@ -67,6 +87,7 @@ const gameBoard = (() => {
     if (gameFlow.isPlayerArray.length === 2) {
       document.querySelector("#header-player-name-selection2").textContent =
         gameFlow.isPlayerArray[1].name;
+      gameFlow.playRound();
     }
   };
 
@@ -82,6 +103,7 @@ const gameBoard = (() => {
 
 const gameFlow = (() => {
   let isPlayerArray = [];
+  let isRoundCounter = 0;
 
   const displayForm = () => {
     gameBoard.createOverlay();
@@ -117,17 +139,41 @@ const gameFlow = (() => {
   };
 
   const resetGame = () => {
-    isPlayerArray.length = 0;
-    gameBoard.length = 0;
+    console.log(isPlayerArray);
+    console.log(gameBoard.choice);
+    console.log(isRoundCounter);
+    gameFlow.isPlayerArray.length = 0;
+    gameBoard.choice.length = 0;
+    gameFlow.isRoundCounter = 0;
     const isBoxArray = gameBoard.createBoxArray();
     isBoxArray.forEach((item) => (item.textContent = ""));
     document.querySelector("#header-player-name-selection1").textContent =
       "Enter name";
     document.querySelector("#header-player-name-selection2").textContent =
       "Enter name";
+    document
+      .querySelectorAll(".box")
+      .forEach((item) =>
+        item.removeEventListener("click", gameBoard.displaySigns)
+      );
   };
 
-  return { displayForm, getPlayerInput, resetGame, isPlayerArray };
+  const playRound = () => {
+    document
+      .querySelectorAll(".box")
+      .forEach((item) =>
+        item.addEventListener("click", gameBoard.displaySigns)
+      );
+  };
+
+  return {
+    displayForm,
+    getPlayerInput,
+    resetGame,
+    isPlayerArray,
+    playRound,
+    isRoundCounter,
+  };
 })();
 
 const player = (name, sign) => {
@@ -138,10 +184,6 @@ const player = (name, sign) => {
 };
 
 // Event listener's
-
-document
-  .querySelectorAll(".box")
-  .forEach((item) => item.addEventListener("click", gameBoard.displaySigns));
 
 document
   .querySelector("#header-player-name-selection1")
