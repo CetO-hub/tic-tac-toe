@@ -21,31 +21,26 @@ const gameBoard = (() => {
   };
 
   const displaySigns = (e) => {
-    if (gameFlow.isRoundCounter % 2 === 0) {
-      console.log(gameFlow.isRoundCounter);
-      const isChoiceArray = pushChoiceAndBox(e);
-      const isBoxArray = createBoxArray();
-      const isFilteredBoxArray = isBoxArray.filter(
-        (item) =>
-          item.getAttribute("data-id") ==
-          isChoiceArray[isChoiceArray.length - 1]["boxId"]
-      );
-      const isClickedElement = isFilteredBoxArray[0];
-
+    const isChoiceArray = pushChoiceAndBox(e);
+    const isBoxArray = createBoxArray();
+    const isFilteredBoxArray = isBoxArray.filter(
+      (item) =>
+        item.getAttribute("data-id") ==
+        isChoiceArray[isChoiceArray.length - 1]["boxId"]
+    );
+    const isClickedElement = isFilteredBoxArray[0];
+    if (
+      gameFlow.isRoundCounter % 2 === 0 &&
+      isClickedElement.textContent === ""
+    ) {
       isClickedElement.textContent = "X";
       gameFlow.isRoundCounter++;
       return;
     }
-    if (gameFlow.isRoundCounter % 2 != 0) {
-      console.log(gameFlow.isRoundCounter);
-      const isChoiceArray = pushChoiceAndBox(e);
-      const isBoxArray = createBoxArray();
-      const isFilteredBoxArray = isBoxArray.filter(
-        (item) =>
-          item.getAttribute("data-id") ==
-          isChoiceArray[isChoiceArray.length - 1]["boxId"]
-      );
-      const isClickedElement = isFilteredBoxArray[0];
+    if (
+      gameFlow.isRoundCounter % 2 != 0 &&
+      isClickedElement.textContent === ""
+    ) {
       isClickedElement.textContent = "O";
       gameFlow.isRoundCounter++;
       return;
@@ -139,9 +134,6 @@ const gameFlow = (() => {
   };
 
   const resetGame = () => {
-    console.log(isPlayerArray);
-    console.log(gameBoard.choice);
-    console.log(isRoundCounter);
     gameFlow.isPlayerArray.length = 0;
     gameBoard.choice.length = 0;
     gameFlow.isRoundCounter = 0;
