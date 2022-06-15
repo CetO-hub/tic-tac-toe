@@ -126,3 +126,24 @@ header ul li {
 .form-container.active {
   transform: translate(-50%, -50%) scale(1);
 }
+
+.winner-container {
+  padding: 20px;
+  background-color: black;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  transition: ease-in-out 0.1s;
+  z-index: 1;
+  width: 300px;
+  text-align: center;
+}
+
+.winner-container.active {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+#winner {
+  color: white;
+}

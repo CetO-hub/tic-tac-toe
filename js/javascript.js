@@ -56,6 +56,7 @@ const gameBoard = (() => {
 
   const displayPlayerForm = () => {
     document.querySelector(".form-container").classList.add("active");
+    document.querySelector("#player-name").focus();
     document
       .querySelector(".overlay")
       .addEventListener("click", removePlayerForm);
@@ -67,12 +68,34 @@ const gameBoard = (() => {
       .addEventListener("click", removeOverlay);
   };
 
+  const displayWinner = (winner) => {
+    createOverlay();
+    document.querySelector(".winner-container").classList.add("active");
+    document.querySelector(
+      "#winner"
+    ).textContent = `${winner} won the game! Congrats :)`;
+
+    document.querySelector(".overlay").addEventListener("click", removeWinner);
+  };
+
+  const displayTie = () => {
+    createOverlay();
+    document.querySelector(".winner-container").classList.add("active");
+    document.querySelector("#winner").textContent = `It is a tie, try again!`;
+
+    document.querySelector(".overlay").addEventListener("click", removeWinner);
+  };
+
   const removeOverlay = () => {
     document.querySelector(".overlay").classList.remove("active");
   };
 
   const removePlayerForm = () => {
     document.querySelector(".form-container").classList.remove("active");
+  };
+
+  const removeWinner = () => {
+    document.querySelector(".winner-container").classList.remove("active");
   };
 
   const printPlayerName = () => {
@@ -95,6 +118,8 @@ const gameBoard = (() => {
     choice,
     printPlayerName,
     createBoxArray,
+    displayWinner,
+    displayTie,
   };
 })();
 
@@ -210,18 +235,18 @@ const gameFlow = (() => {
       isBoxArrayDiaUpDown.every((item) => item.textContent == "X") ||
       isBoxArrayDiaDownUp.every((item) => item.textContent == "X")
     ) {
-      alert(
-        `Player: ${isPlayerArray
-          .map((item) => {
-            if (item.sign == "X") return item.name;
-          })
-          .join(" ")} won!`
-      );
+      const isWinnerName = isPlayerArray
+        .map((item) => {
+          if (item.sign == "X") return item.name;
+        })
+        .join(" ");
+      gameBoard.displayWinner(isWinnerName);
       document
         .querySelectorAll(".box")
         .forEach((item) =>
           item.removeEventListener("click", gameBoard.displaySigns)
         );
+      return;
     }
     if (
       isBoxArrayTopHor.every((item) => item.textContent == "O") ||
@@ -233,19 +258,30 @@ const gameFlow = (() => {
       isBoxArrayDiaUpDown.every((item) => item.textContent == "O") ||
       isBoxArrayDiaDownUp.every((item) => item.textContent == "O")
     ) {
-      alert(
-        `Player: ${isPlayerArray
-          .map((item) => {
-            if (item.sign == "O") return item.name;
-          })
-          .join(" ")} won!`
-      );
+      const isWinnerName = isPlayerArray
+        .map((item) => {
+          if (item.sign == "O") return item.name;
+        })
+        .join(" ");
+      gameBoard.displayWinner(isWinnerName);
       document
         .querySelectorAll(".box")
         .forEach((item) =>
           item.removeEventListener("click", gameBoard.displaySigns)
         );
+      return;
     }
+
+    const isSignsSet = Object.values(
+      isBoxArray.reduce((item, { textContent }) => {
+        if (item[textContent] === undefined)
+          item[textContent] = { sign: textContent, count: 1 };
+        else item[textContent].count++;
+        return item;
+      }, {})
+    );
+    if (isSignsSet[0]["sign"] == "X" && isSignsSet[0]["count"] === 5)
+      gameBoard.displayTie();
   };
 
   return {
